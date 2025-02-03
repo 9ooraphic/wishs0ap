@@ -1,0 +1,265 @@
+html {
+    cursor: none; /* 기본 커서 없애기 */
+    width: 100vw; /* 전체 화면 너비 */
+    height: 90vh;
+    max-width: 100%; /* 최대 너비 제한 */
+    background-color: #CBFD00;
+    background-image: url("../images/background3.png"); /* ✅ 올바른 경로 */
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    min-width: 100vh;
+    position: fixed;    
+    overflow: hidden;
+}
+/* 커서 모양을 이미지로 변경 */
+#custom-cursor {
+    position: fixed;
+    width: 250px;
+    height: 250px;
+    background: url("../images/hand.cur") no-repeat center;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+}
+@media (max-width: 768px) {  /* 모바일 화면 (가로 768px 이하) */
+    #custom-cursor {
+        display: none !important;
+    }
+}
+
+
+/* 🔹 비누 버튼 위치 설정 (화면 비율에 따라 조정) */
+.soap-button {
+    position: fixed;
+    top: clamp(1px, 5vh, 20px);  /* 최소 10px, 최대 40px 유지 */
+    right: clamp(5px, 5vw, 6px); /* 최소 10px, 최대 40px 유지 */
+    width: clamp(100px, 12vw, 200px); /* 비누 크기 200% 적용 */
+    height: clamp(100px, 12vw, 200px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* 회전할 때 화면 밖으로 안 나가도록 설정 */
+}
+
+/* 🔹 기본 비누 이미지 (회전 애니메이션) */
+#soap-icon {
+    width: 100%;
+    height: auto;
+    animation: spin 5s linear infinite; /* 5초에 한 바퀴 회전 (속도 조절 가능) */
+    transition: transform 0.3s ease-in-out;
+}
+
+/* 🔹 회전 애니메이션 (화면 밖으로 나가지 않도록 중심 유지) */
+@keyframes spin {
+    from {
+        transform: rotate(0deg) scale(1);
+    }
+    to {
+        transform: rotate(360deg) scale(1);
+    }
+}
+.text-container {
+    position: fixed;
+    display: inline-block;
+    margin-top: 7vh;
+    width: 100vw; /* 전체 화면 너비 */
+    height:100vh;
+    right: 1%;
+    max-width: 100%; /* 최대 너비 제한 */
+    max-height: 90vh; /* 최대 높이를 90%로 제한 */
+    text-align: center;
+
+}
+
+.text-top {
+    font-family: "Sancreek", cursive;
+    color: #FFFFBD;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* 원하는 높이 설정 */
+    line-height: 250px;
+    font-size: 17vw;
+    letter-spacing: -10px; /* 음수값 적용 */
+    display: inline-block; /* transform을 제대로 적용하려면 필요 */
+    transform: scaleY(1.3); /* 1.5배 세로로 늘리기 */
+    
+    
+}
+.text-bottom {
+    font-family: "Sancreek", cursive;
+    color: #FFFFBD;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* 원하는 높이 설정 */
+    line-height: 250px;
+    font-size: 17VW;
+    -webkit-text-stroke: 20px black;  /* 윤곽선 두께 및 색상 */
+    letter-spacing: -10px; /* 음수값 적용 */
+    display: inline-block; /* transform을 제대로 적용하려면 필요 */
+    transform: scaleY(1.3); /* 1.5배 세로로 늘리기 */
+    
+
+    
+}
+@media (max-width: 768px) { /* ✅ 모바일 화면 (768px 이하) */
+    .text-container {
+        margin-top: -1vh; /* ✅ 모바일에서 7vh → 3vh로 줄이기 */
+    }
+    .text-top {
+        font-size: 21vw;
+    }
+    .text-bottom {
+        font-size: 21vw;
+
+    }
+}
+
+h3 {
+    position: absolute;
+    bottom: 10vh; /* 화면 하단에서 10px 위에 배치 */
+    left: 50%;
+    transform: translateX(-50%); /* 중앙 정렬 */
+    text-align: center;
+    font-size: 1.3rem;
+    color: white;
+    font-family: "Quicksand", sans-serif;
+}
+.wish-container {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    display: flex;
+    gap: 10px; /* 입력창과 버튼 사이 간격 */
+    font-family: "Quicksand", sans-serif;
+}
+
+#wish-input {
+    width: 250px;
+    height: 20px;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 20px;
+    border: 2px solid white;
+    background: rgba(255, 255, 255, 0.8);
+    color: black;
+    text-align: center;
+    outline: none;
+}
+@media (max-width: 768px) { /* ✅ 모바일 화면 (768px 이하) */
+    #wish-input {
+        width: 200px;; /* ✅ 모바일에서 7vh → 3vh로 줄이기 */
+    }
+}
+
+#wish-button {
+    height: 42px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 20px;
+    border: none;
+    background: white;
+    color: black;
+    cursor: pointer;
+    transition: 0.3s;
+    white-space: nowrap; /* 줄 바꿈 방지 */
+    
+}
+
+#wish-button:hover {
+    background: lightgray;
+}
+
+/* 🔹 "3초간 비누를 문지르세요" 메시지 스타일 */
+#wish-message {
+    font-size: 1.2rem;
+    color: white;
+    font-weight: bold;
+    display: none; /* 기본적으로 숨김 */
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* 🔹 부드러운 페이드 인 효과 */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+
+.video-container {
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 중앙 정렬 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.8); /* 처음에는 살짝 작게 */
+    transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+}
+
+.video-container img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: auto;
+}
+
+.video-container.show {
+    opacity: 1;
+    transform: scale(1); /* 점점 커지면서 나타남 */
+}
+
+@media (max-width: 768px) { /* ✅ 화면 너비가 768px 이하일 때 (모바일) */
+    .video-container.show {
+        opacity: 1;
+        transform: scale(1.5); /* 점점 커지면서 나타남 */
+    }
+}
+
+#soap-video {
+    width: 65vw;
+    height: auto;
+}
+
+.text-bubble {
+    position: absolute;
+    font-size: 3vh;
+    color: white;
+    -webkit-text-stroke: 1px rgb(255, 255, 255); /* 웹킷 브라우저용 */
+    text-shadow: 
+    -1px -1px 0 rgb(0, 195, 255),  
+     1px -1px 0 rgb(158, 158, 255),  
+    -1px  1px 0 rgb(255, 255, 255),  
+     1px  1px 0 rgb(255, 255, 255); /* 모든 브라우저용 */
+    background: rgba(0, 0, 0, 0);
+    padding: 8px 12px;
+    border-radius: 10px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    transform: scale(0.8);
+    z-index: 9998; /* 비디오보다 위에 위치 */
+    font-family: 'Bagel Fat One', sans-serif; /* 폰트 적용 */
+}
+
+.text-bubble.show {
+    opacity: 0.8;
+    transform: scale(1);
+}

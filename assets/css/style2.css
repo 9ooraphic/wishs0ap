@@ -1,0 +1,108 @@
+body {
+    margin: 0;
+    height: 100vh;
+    background-color: rgb(0, 0, 0);
+    overflow: hidden; /* 스크롤 방지 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+ .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none; /* 클릭 방지 */
+        }
+
+        .video-background iframe {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+/* 🔹 비누 버튼 위치 설정 (화면 비율에 따라 조정) */
+.soap-button {
+    position: absolute;
+    top: clamp(10px, 5vh, 40px);  /* 최소 10px, 최대 40px 유지 */
+    right: clamp(10px, 5vw, 40px); /* 최소 10px, 최대 40px 유지 */
+    width: clamp(100px, 12vw, 200px); /* 비누 크기 200% 적용 */
+    height: clamp(100px, 12vw, 200px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* 회전할 때 화면 밖으로 안 나가도록 설정 */
+}
+
+/* 🔹 기본 비누 이미지 (회전 애니메이션) */
+#soap-icon {
+    width: 100%;
+    height: auto;
+    animation: spin 5s linear infinite; /* 5초에 한 바퀴 회전 (속도 조절 가능) */
+    transition: transform 0.3s ease-in-out;
+}
+
+/* 🔹 회전 애니메이션 (화면 밖으로 나가지 않도록 중심 유지) */
+@keyframes spin {
+    from {
+        transform: rotate(0deg) scale(1);
+    }
+    to {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+#wish-container {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+@keyframes floatAnimation {
+    0% { transform: translateY(0px) translateX(0px); }
+    25% { transform: translateY(calc(var(--directionY) * 10px)) translateX(calc(var(--directionX) * 10px)); }
+    50% { transform: translateY(calc(var(--directionY) * -10px)) translateX(calc(var(--directionX) * 10px)); }
+    75% { transform: translateY(calc(var(--directionY) * 10px)) translateX(calc(var(--directionX) * -10px)); }
+    100% { transform: translateY(0px) translateX(0px); }
+}
+
+.wish-bubble {
+    position: absolute;
+    background: rgba(203, 253, 0, 1);
+    padding: 20px 20px;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-family: "Quicksand", sans-serif;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: scale 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transform: translate(-50%, -50%);
+    max-width: 200px; /* 최대 크기 제한 */
+    max-height: 200px;
+    
+    animation: floatAnimation 5s infinite ease-in-out alternate; /* 애니메이션 적용 */
+}
+
+.wish-bubble:hover {
+    scale: 1.2;
+    opacity: 0.1;
+    
+}
+
+/* 🔹 부드럽게 떠다니는 애니메이션 */
+@keyframes floatAnimation {
+    0% {
+        transform: translateY(0px);
+    }
+    100% {
+        transform: translateY(-30px);
+    }
+}
