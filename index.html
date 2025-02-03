@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wish soap</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sancreek&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/images/icon.png">
+
+    
+
+</head>
+<body>
+    <div class="background"></div>
+    <div class="text-container">
+        <span class="text-bottom">Wish Soap</span>
+        <span class="text-top">Wish Soap</span>
+    </div>
+    <div id="custom-cursor"></div>
+    <div class="video-container">
+        <img id="soap-video" src="assets/video/handsoap.gif" alt="비누 GIF">
+    </div>
+    <div class="wish-container">
+        <input type="text" id="wish-input" placeholder="소원을 입력하세요..." maxlength="50">
+        <button id="wish-button">소원 빌기</button>
+        <p id="wish-message" style="display: none;">3초간 비누를 문지르세요</p>
+    </div>
+    <div class="soap-button">
+    <a href="wish.html">
+        <img id="soap-icon" src="assets/images/soapbutton.png" alt="비누 버튼">
+    </a>
+</div>
+
+</body>
+
+<!-- 🔹 마우스 커서 따라다니는 기능 -->
+<script>
+    const cursor = document.querySelector("#custom-cursor");
+
+    document.addEventListener("mousemove", (e) => {
+        cursor.style.left = `${e.clientX}px`;
+        cursor.style.top = `${e.clientY}px`;
+    });
+</script>
+
+<!-- 🔹 문지를 때 텍스트가 나오고, 3초간 문지르면 알림 표시 기능 (모바일 터치 추가) -->
+<script>
+    const video = document.getElementById("soap-video");
+    const messages = ["bubble", "pop", "blob", "?", "plop"];
+    const textBubbles = [];
+    let isScrubbing = false; 
+    let scrubTimer;
+    let scrubStartTime;
+
+    // 🟢 모바일 터치 지원 추가
+    const eventType = "ontouchmove" in window ? "touchmove" : "mousemove";
+
+    video.addEventListener(eventType, (e) => {
+        if (!isScrubbing) {
+            isScrubbing = true;
+            scrubStartTime = Date.now();
+            startScrubCheck();
+        }
+
+        let clientX, clientY;
+        if (e.touches) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        } else {
+            clientX = e.clientX;
+            clientY = e.clientY;
+        }
+
+        const rect = video.getBoundingClientRect();
+        const mouseX = clientX - rect.left;
+        const mouseY = clientY - rect.top;
+        const videoWidth = rect.width;
+        const videoHeight = rect.height;
+
+        const minX = videoWidth * 0.3;
+        const maxX = videoWidth * 0.6;
+        const minY = videoHeight * 0.2;
+        const maxY = videoHeight * 0.8;
+
+        if (mouseX > minX && mouseX < maxX && mouseY > minY && mouseY < maxY) { 
+            if (Math.random() > 0.9) { 
+                createTextBubble(mouseX, mouseY, rect);
+            }
+        }
+    });
+
+    video.addEventListener("mouseleave", resetScrub);
+    video.addEventListener("mouseup", resetScrub);
+    video.addEventListener("touchend", resetScrub); // 터치 종료 시 초기화
+
+    function startScrubCheck() {
+        scrubTimer = setInterval(() => {
+            let elapsedTime = Date.now() - scrubStartTime;
+            if (elapsedTime >= 4000) { // 3초 동안 문지르면 알림 표시
+                showAlert();
+                resetScrub();
+            }
+        }, 1000);
+    }
+
+    function resetScrub() {
+        clearInterval(scrubTimer);
+        isScrubbing = false;
+    }
+
+    function showAlert() {
+        const randomMessage = alertMessages[Math.floor(Math.random() * alertMessages.length)];
+        alert(randomMessage);
+    }
+
+    function createTextBubble(x, y, rect) {
+        const bubble = document.createElement("div");
+        bubble.classList.add("text-bubble");
+        bubble.innerText = messages[Math.floor(Math.random() * messages.length)]; 
+
+        let offsetX, offsetY, safePosition = false;
+        let attempts = 0;
+
+        while (!safePosition && attempts < 10) { 
+            offsetX = (Math.random() - 0.5) * 320;
+            offsetY = (Math.random() - 0.5) * 320; 
+
+            let newX = rect.left + x + offsetX;
+            let newY = rect.top + y + offsetY;
+
+            safePosition = textBubbles.every(b => { 
+                let distance = Math.sqrt((b.x - newX) ** 2 + (b.y - newY) ** 2);
+                return distance > 50; 
+            });
+
+            attempts++; 
+        }
+
+        bubble.style.left = `${rect.left + x + offsetX}px`; 
+        bubble.style.top = `${rect.top + y + offsetY}px`; 
+
+        document.body.appendChild(bubble); 
+
+        textBubbles.push({ x: rect.left + x + offsetX, y: rect.top + y + offsetY });
+
+        setTimeout(() => {
+            bubble.classList.add("show");
+        }, 50);
+
+        setTimeout(() => {
+            bubble.classList.remove("show");
+            setTimeout(() => {
+                bubble.remove();
+                textBubbles.shift(); 
+            }, 500);
+        }, 1000);
+    }
+</script>
+
+<!-- 🔹 동영상이 서서히 나타나는 기능 -->
+<script>
+    window.addEventListener("load", () => {
+        document.querySelector(".video-container").classList.add("show");
+    });
+</script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+  
+    const firebaseConfig = {
+      apiKey: "AIzaSyBqFI869fNpWOLI5GKzYBmPlyIOdPua0VM",
+      authDomain: "soap-beb4d.firebaseapp.com",
+      databaseURL: "https://soap-beb4d-default-rtdb.firebaseio.com",
+      projectId: "soap-beb4d",
+      storageBucket: "soap-beb4d.firebasestorage.app",
+      messagingSenderId: "937077807177",
+      appId: "1:937077807177:web:1ccb0e2226059b88570798",
+      measurementId: "G-LMR6KHYTHN"
+    };
+  
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+  
+    document.getElementById("wish-button").addEventListener("click", function () {
+        const wishInput = document.getElementById("wish-input");
+        const wishMessage = document.getElementById("wish-message");
+  
+        if (wishInput.value.trim() === "") {
+            alert("소원을 입력하세요!");
+            return;
+        }
+  
+        // ✅ Firebase에 소원 저장
+        push(ref(db, "wishes"), wishInput.value.trim());
+  
+        // ✅ 입력창 숨기기 및 3초 메시지 표시
+        wishInput.style.display = "none";
+        document.getElementById("wish-button").style.display = "none";
+        wishMessage.style.display = "block";
+  
+        // ✅ 3초 문지르기 기능 유지
+        let isScrubbing = false; 
+        let scrubStartTime;
+        let scrubTimer;
+        const eventType = "ontouchmove" in window ? "touchmove" : "mousemove";
+  
+        // 🔹 비누를 문지르기 시작하면 타이머 시작
+        video.addEventListener(eventType, (e) => {
+            if (!isScrubbing) {
+                isScrubbing = true;
+                scrubStartTime = Date.now();
+                startScrubCheck();
+            }
+        });
+  
+        function startScrubCheck() {
+            scrubTimer = setInterval(() => {
+                let elapsedTime = Date.now() - scrubStartTime;
+                if (elapsedTime >= 3000) {
+                    showRandomMessage();
+                    resetScrub();
+                }
+            }, 1000);
+        }
+  
+        function resetScrub() {
+            clearInterval(scrubTimer);
+            isScrubbing = false;
+        }
+  
+        function showRandomMessage() {
+            const wishMessages = [
+                "간절히 빌면 이루어질 거예요.",
+                "얼토당토하지 않는 소원입니다.",
+                "더 간절히 싹싹 비세요.",
+                "2주 안에 이루어질 거예요."
+            ];
+            alert(wishMessages[Math.floor(Math.random() * wishMessages.length)]);
+            location.reload();
+        }
+  
+        video.addEventListener("mouseleave", resetScrub);
+        video.addEventListener("mouseup", resetScrub);
+        video.addEventListener("touchend", resetScrub);
+    });
+  </script>
+</html>
