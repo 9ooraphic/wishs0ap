@@ -91,7 +91,7 @@
     <div id="wish-container"></div> <!-- 소원이 랜덤하게 떠다닐 컨테이너 -->
 </div>
 <div class="soap-button">
-<a href="index.html">
+<a href="/index.html">
     <img id="soap-icon" src="assets/images/soapbutton.png" alt="비누 버튼">
 </a>
 
@@ -124,6 +124,21 @@
     }
 </script>
 <script src="https://www.youtube.com/iframe_api"></script>
+<script>window.addEventListener("load", () => {
+    const video = document.getElementById("soap-video");
+    video.muted = true;  // 확실히 음소거
+    video.play().catch(error => console.log("자동 재생 실패:", error));
+});
+
+document.addEventListener("click", () => {
+    const video = document.getElementById("soap-video");
+    if (video.paused) {
+        video.play();
+    }
+});
+
+</script>
+
 
 
 </html>
