@@ -108,36 +108,45 @@
     }
 
     function onPlayerReady(event) {
-        event.target.playVideo();
-        event.target.seekTo(20); // 20초부터 시작
+        if (!isMobile()) {
+            event.target.playVideo();
+            event.target.seekTo(20); // 20초부터 시작
+        }
     }
 
     function onPlayerStateChange(event) {
         if (event.data == YT.PlayerState.PLAYING) {
             setInterval(() => {
                 let currentTime = player.getCurrentTime();
-                if (currentTime >= 64) { // 106초(1분 46초)에 도달하면
+                if (currentTime >= 106) { // 106초(1분 46초)에 도달하면
                     player.seekTo(20); // 20초로 다시 이동
                 }
             }, 1000);
         }
     }
+
+    function isMobile() {
+        return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    }
+
+    if (isMobile()) {
+        document.getElementById("youtube-video").style.pointerEvents = "none"; // 초기에는 클릭 방지
+
+        document.addEventListener("touchstart", () => {
+            if (player) {
+                document.getElementById("youtube-video").style.pointerEvents = "auto"; // 클릭 가능하도록 변경
+                player.playVideo();
+            }
+        });
+    }
+
+// 유튜브 API 로드
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 </script>
 <script src="https://www.youtube.com/iframe_api"></script>
-<script>window.addEventListener("load", () => {
-    const video = document.getElementById("soap-video");
-    video.muted = true;  // 확실히 음소거
-    video.play().catch(error => console.log("자동 재생 실패:", error));
-});
-
-document.addEventListener("click", () => {
-    const video = document.getElementById("soap-video");
-    if (video.paused) {
-        video.play();
-    }
-});
-
-</script>
 
 
 
